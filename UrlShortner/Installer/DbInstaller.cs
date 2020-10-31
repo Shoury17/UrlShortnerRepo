@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UrlShortner.Domain;
+using UrlShortner.Services;
 
 namespace UrlShortner.Installer
 {
@@ -22,6 +23,9 @@ namespace UrlShortner.Installer
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection")));
+
+            // Add Url Service in scope
+            services.AddScoped<IUrlService, UrlService>();
         }
     }
 }
