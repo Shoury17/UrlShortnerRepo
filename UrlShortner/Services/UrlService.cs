@@ -27,5 +27,12 @@ namespace UrlShortner.Services
             var added = await this.dataContext.SaveChangesAsync();
             return added > 0;
         }
+
+        public async Task<bool> UpdateUrlDataAsync(tbl_urldata urlDataToUpdate)
+        {
+            this.dataContext.tbl_urldata.Update(urlDataToUpdate);
+            var updated = await this.dataContext.SaveChangesAsync();
+            return updated > 0;
+        }
     }
 }

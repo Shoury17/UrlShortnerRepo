@@ -10,5 +10,6 @@ namespace UrlShortner.Services
     {
         Task<tbl_urldata> GetUrlDataByShortCodeAsync(string shortCode);
         Task<bool> CreateUrlDataAsync(tbl_urldata urlAddData);
+        Task<bool> UpdateUrlDataAsync(tbl_urldata urlDataToUpdate);
     }
 }

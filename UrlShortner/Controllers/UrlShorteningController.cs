@@ -35,5 +35,28 @@ namespace UrlShortner.Controllers
             UrlShorteningResponse response = await urlMakingLogic.MakeShortUrl(requestData);
             return Ok(response);
         }
+
+
+        /// <summary>
+        /// Search long url by short url
+        /// </summary>
+        /// <param name="shortCode">Short code from url</param>
+        /// <returns>Redirect the user according to long url found</returns>
+        [HttpGet("search/{shortCode}")]
+        public async Task<RedirectResult> SearchUrl([FromRoute] string shortCode)
+        {
+            // Object for searching long url
+            UrlSearchLogic urlSearchLogic = new UrlSearchLogic(this.urlService);
+            UrlSearchResponse response = await urlSearchLogic.Search(shortCode);
+
+            // Url is not found or Url is deactivated then redirect to notfound url
+            if (response.isFound == false)
+                return new RedirectResult(url: "/notfound", permanent: true,
+                 preserveMethod: true);
+
+            // Redirect to long url
+            return new RedirectResult(url: response.longUrl, permanent: true,
+                             preserveMethod: true);
+        }
     }
 }
