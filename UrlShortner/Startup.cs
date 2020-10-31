@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using UrlShortner.Installer;
+using UrlShortner.Options;
 
 namespace UrlShortner
 {
@@ -29,6 +31,8 @@ namespace UrlShortner
         {
             services.AddControllers();
 
+            services.InstallServiceInAssembly(Configuration);
+
             // Add S3 to the ASP.NET Core dependency injection framework.
             services.AddAWSService<Amazon.S3.IAmazonS3>();
         }
@@ -45,7 +49,11 @@ namespace UrlShortner
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            // Swagger
+            var swaggerOptions = new SwaggerOptions();
+            Configuration.GetSection(nameof(SwaggerOptions)).Bind(swaggerOptions);
+            app.UseSwagger(option => { option.RouteTemplate = swaggerOptions.JsonRoute; });
+            app.UseSwaggerUI(option => { option.SwaggerEndpoint(swaggerOptions.UIEndpoint, swaggerOptions.Description); });
 
             app.UseEndpoints(endpoints =>
             {
